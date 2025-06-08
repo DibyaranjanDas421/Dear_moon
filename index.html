@@ -168,7 +168,12 @@
       }
     });
 
-    if (stars.every(s => s.r === 0)) {
+    // Calculate the percentage of erased stars
+    const erasedCount = stars.filter(s => s.r === 0).length;
+    const erasedPercent = erasedCount / stars.length;
+
+    // Trigger when 80% or more stars are erased
+    if (erasedPercent >= 0.8) {
       document.getElementById("message").style.opacity = 1;
       startCarousel();
       music.play();
