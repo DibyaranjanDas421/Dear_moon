@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Constellation of You</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+      color: white;
+      font-family: sans-serif;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    #message {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 1.5em;
+      opacity: 0;
+      transition: opacity 2s ease;
+      z-index: 3;
+    }
+
+    .carousel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+      animation: fadeIn 3s ease forwards;
+    }
+
+    .carousel img {
+      max-width: 80%;
+      max-height: 80%;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+      object-fit: cover;
+      transition: opacity 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div id="carousel" class="carousel">
+  <img id="carousel-img" src="">
+</div>
+
+<div id="message">"The stars led me to you." 🌌</div>
+
+<audio id="bg-music" src="assests\Mitwa - Kabhi Alvida Naa Kehna - Pagallworld.com.mp3" preload="auto"></audio>
+
+<script>
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const stars = Array.from({length: 300}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.5 + 0.5
+  }));
+
+  const carousel = document.getElementById('carousel');
+  const carouselImg = document.getElementById('carousel-img');
+  const music = document.getElementById('bg-music');
+
+  const images = [
+    "./assests/IMG-20250501-WA0010.jpg",
+    "./assests/IMG-20250501-WA0016.jpg",
+"./assests/IMG-20250504-WA0007.jpg",
+"./assests/IMG-20250525-WA0002.jpg",
+"./assests/IMG-20250527-WA0004.jpg",
+"./assests/IMG-20250601-WA0001.jpg",
+"./assests/IMG-20250601-WA0002.jpg",
+"./assests/IMG-20250601-WA0003.jpg",
+"./assests/IMG-20250601-WA0006.jpg",
+"./assests/248c2762-5764-4cf2-8343-0be79045773a (1).jpg",
+"./assests/248c2762-5764-4cf2-8343-0be79045773a.jpg",
+"./assests/0383fb71-d6ca-418c-8b32-a5793c40fbbc.jpg",
+"./assests/701b98bd-f6ad-46f5-b521-80dc982d55c6.jpg",
+"./assests/3632b3fd-a0c5-48b4-ac65-d8209bfb10e4.jpg",
+"./assests/187336e5-4c87-454d-9cb2-82e50764ca1e.jpg",
+"./assests/a41e9516-3576-448f-9172-24d76d8704ff.jpg",
+"./assests/c1f8fa90-1075-48a0-b3a3-595cc4cc4889.jpg",
+"./assests/d8d9b0df-ec97-434f-bf1e-e886fdef5a56.jpg",
+"./assests/d6664ecd-ab55-4e5e-a3fc-3dd3af564d98.jpg",
+"./assests/04c1d2b3-3f8a-4b37-8085-a724c51b5c5b.jpg",
+"\assests\img1.jpg",
+"\assests\img2.jpg",
+"\assests\img3.jpg",
+"\assests\img4.jpg",
+"\assests\img7.jpg",
+"\assests\img8.jpg",
+"\assests\img9.jpg",
+"\assests\img10.jpg",
+  
+  ];
+
+  let currentIndex = 0;
+  function startCarousel() {
+    carousel.style.display = "flex";
+    carouselImg.src = images[currentIndex];
+    setInterval(() => {
+      currentIndex = (currentIndex + 1) % images.length;
+      carouselImg.style.opacity = 0;
+      setTimeout(() => {
+        carouselImg.src = images[currentIndex];
+        carouselImg.style.opacity = 1;
+      }, 500);
+    }, 3000);
+  }
+
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+    for (const star of stars) {
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function eraseStars(x, y) {
+    stars.forEach(star => {
+      const dist = Math.hypot(star.x - x, star.y - y);
+      if (dist < 50) {
+        star.r = 0;
+      }
+    });
+
+    if (stars.every(s => s.r === 0)) {
+      document.getElementById("message").style.opacity = 1;
+      startCarousel();
+      music.play();
+      canvas.style.display = "none";
+    }
+  }
+
+  canvas.addEventListener("mousemove", e => {
+    eraseStars(e.clientX, e.clientY);
+  });
+
+  setInterval(drawStars, 30);
+</script>
+
+</body>
+</html>
