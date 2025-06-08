@@ -70,6 +70,7 @@
 
 <div id="message">"The stars led me to you." 🌌</div>
 
+
 <audio id="bg-music" src="assests\Mitwa - Kabhi Alvida Naa Kehna - Pagallworld.com.mp3" preload="auto"></audio>
 
 <script>
@@ -88,7 +89,7 @@
   const carouselImg = document.getElementById('carousel-img');
   const music = document.getElementById('bg-music');
 
-  const images = [
+ const images = [
     "./assests/IMG-20250501-WA0010.jpg",
     "./assests/IMG-20250501-WA0016.jpg",
 "./assests/IMG-20250504-WA0007.jpg",
@@ -162,6 +163,13 @@
 
   canvas.addEventListener("mousemove", e => {
     eraseStars(e.clientX, e.clientY);
+  });
+
+  canvas.addEventListener("touchmove", e => {
+    const touch = e.touches[0];
+    if (touch) {
+      eraseStars(touch.clientX, touch.clientY);
+    }
   });
 
   setInterval(drawStars, 30);
